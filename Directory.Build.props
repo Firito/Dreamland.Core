@@ -1,0 +1,12 @@
+<Project>
+  <Import Project="Build\Version.props" />
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)bin\$(Configuration)</PackageOutputPath>
+    <Authors>Firito</Authors>
+    <RepositoryUrl>https://github.com/Firito/Dreamland.Core</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>https://github.com/Firito/Dreamland.Core</PackageProjectUrl>
+    <Description>提供Dreamland项目集的基础功能（预览）</Description>
+  </PropertyGroup>
+</Project>
