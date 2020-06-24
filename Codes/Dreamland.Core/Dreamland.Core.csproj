@@ -3,10 +3,12 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFrameworks>netcoreapp3.1;net45</TargetFrameworks>
+    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Dreamland.Core.csproj.DotSettings" />
+    <None Remove="Dreamland.Core.xml" />
   </ItemGroup>
 
 </Project>

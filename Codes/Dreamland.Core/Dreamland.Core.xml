@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Dreamland.Core</name>
+    </assembly>
+    <members>
+        <member name="T:Dreamland.Core.AttributesExtension">
+            <summary>
+                提供特性方法的拓展
+            </summary>
+        </member>
+        <member name="M:Dreamland.Core.AttributesExtension.TryGetCustomAttribute``1(System.Enum,``0@)">
+            <summary>
+                获取枚举值上的指定特性
+            </summary>
+            <typeparam name="TResult">要获取的<see cref="T:System.Attribute" />值的<see cref="T:System.Type" /></typeparam>
+            <param name="enumValue">从哪一个<see cref="T:System.Enum" />获取<see cref="T:System.Attribute" />值</param>
+            <param name="result">取得的<see cref="T:System.Attribute" />值</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dreamland.Core.AttributesExtension.GetCustomAttribute``1(System.Enum)">
+            <summary>
+                获取枚举值上的指定特性
+            </summary>
+            <typeparam name="TResult">要获取的<see cref="T:System.Attribute" />值的<see cref="T:System.Type" /></typeparam>
+            <param name="enumValue">从哪一个<see cref="T:System.Enum" />获取<see cref="T:System.Attribute" />值</param>
+            <returns>取得的<see cref="T:System.Attribute" />值</returns>
+        </member>
+        <member name="T:Dreamland.Core.EnumTagAttribute">
+            <summary>
+                枚举标记特性
+            </summary>
+        </member>
+        <member name="M:Dreamland.Core.EnumTagAttribute.#ctor">
+            <summary>
+                构造
+            </summary>
+        </member>
+        <member name="M:Dreamland.Core.EnumTagAttribute.#ctor(System.String,System.String)">
+            <summary>
+                构造
+            </summary>
+        </member>
+        <member name="P:Dreamland.Core.EnumTagAttribute.Name">
+            <summary>
+                获取或设置字段或属性名称。
+            </summary>
+        </member>
+        <member name="P:Dreamland.Core.EnumTagAttribute.Description">
+            <summary>
+                获取或设置字段或属性描述。
+            </summary>
+        </member>
+    </members>
+</doc>
