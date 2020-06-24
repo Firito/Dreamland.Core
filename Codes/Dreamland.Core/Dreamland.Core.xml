@@ -51,5 +51,47 @@
                 获取或设置字段或属性描述。
             </summary>
         </member>
+        <member name="T:Dreamland.Core.IO.FolderExtension">
+            <summary>
+                提供文件夹的相关拓展方法
+            </summary>
+        </member>
+        <member name="M:Dreamland.Core.IO.FolderExtension.TryClearFolder(System.String)">
+            <summary>
+                尝试删除文件夹以及子文件夹
+            </summary>
+            <param name="dir">要删除的目录</param>
+        </member>
+        <member name="M:Dreamland.Core.IO.FolderExtension.TryClearOverdueFolder(System.String,System.Int32)">
+            <summary>
+                尝试删除创建时间是否超过指定天数的旧文件夹
+            </summary>
+            <param name="dir">要删除的目录</param>
+            <param name="days">指定天数</param>
+        </member>
+        <member name="M:Dreamland.Core.IO.FolderExtension.IsEmptyDirectory(System.String)">
+            <summary>
+                检测文件夹的是否为空目录
+            </summary>
+            <param name="folderName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dreamland.Core.IO.FolderExtension.IsOverdueDirectory(System.String,System.Int32)">
+            <summary>
+                检测文件夹的创建时间是否超过指定天数
+            </summary>
+            <param name="folderPath">文件夹路径</param>
+            <param name="days">指定天数</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dreamland.Core.IO.FolderExtension.IsOverdueFile(System.String,System.Int32)">
+            <summary>
+                检测文件的创建时间是否超过指定天数
+            </summary>
+            <param name="filePath">文件夹路径</param>
+            <param name="days">指定天数</param>
+            <returns></returns>
+            <returns></returns>
+        </member>
     </members>
 </doc>
