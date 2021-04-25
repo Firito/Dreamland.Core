@@ -61,8 +61,8 @@ namespace Dreamland.Core.Test
             Assert.IsTrue(Mouse.Drag(new Point(400, 600), new Point(600, 800)));
             Assert.IsTrue(Mouse.Drag(new Point(1000, 500), new List<Point>()
             {
-                new(1000, 600),
-                new(1200, 800)
+                new Point(1000, 600),
+                new Point(1200, 800)
             }));
         }
 
