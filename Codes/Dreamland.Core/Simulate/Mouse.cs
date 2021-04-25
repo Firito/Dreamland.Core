@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
 using PInvoke;
@@ -207,6 +208,48 @@ namespace Dreamland.Core.Simulate
         }
 
         /// <summary>
+        ///     将鼠标从鼠标当前位置沿着<paramref name="pathPoints"/>路径进行拖拽
+        /// </summary>
+        /// <param name="pathPoints">拖拽途径的点</param>
+        /// <param name="speed">拖拽速度</param>
+        public static bool Drag(List<Point> pathPoints, uint speed = DefaultDragSpeed)
+        {
+            return GetCursorPos(out var currentPoint) && Drag(currentPoint, pathPoints, speed);
+        }
+
+        /// <summary>
+        ///     将鼠标从指定坐标点<paramref name="startPoint"/>沿着<paramref name="pathPoints"/>路径进行拖拽
+        /// </summary>
+        /// <param name="startPoint">拖拽起始坐标点</param>
+        /// <param name="pathPoints">拖拽途径的点</param>
+        /// <param name="speed">拖拽速度</param>
+        public static bool Drag(Point startPoint, List<Point> pathPoints, uint speed = DefaultDragSpeed)
+        {
+            User32.mouse_event(User32.mouse_eventFlags.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, IntPtr.Zero);
+            Thread.Sleep(MouseDelay);
+            
+            //执行移动
+            var latestPoint = startPoint;
+            if (pathPoints.Count == 0)
+            {
+                ExecuteDrag(startPoint, 0, 0, speed);
+                Thread.Sleep(MouseDelay);
+            }
+            else
+            {
+                foreach (var pathPoint in pathPoints)
+                {
+                    ExecuteDrag(startPoint, pathPoint.X - latestPoint.X, pathPoint.Y - latestPoint.Y, speed);
+                    latestPoint = pathPoint;
+                    Thread.Sleep(MouseDelay);
+                }
+            }
+
+            User32.mouse_event(User32.mouse_eventFlags.MOUSEEVENTF_LEFTUP, 0, 0, 0, IntPtr.Zero);
+            return true;
+        }
+
+        /// <summary>
         ///     执行一次拖拽<para>将鼠标从指定坐标点<paramref name="startPoint"/>拖拽 <paramref name="offsetX"/> 个横向偏移量，<paramref name="offsetY"/> 个纵向偏移量</para>
         /// </summary>
         /// <param name="startPoint">拖拽起始坐标点</param>
@@ -215,31 +258,42 @@ namespace Dreamland.Core.Simulate
         /// <param name="speed">拖拽速度</param>
         private static void ExecuteDrag(Point startPoint, int offsetX, int offsetY, uint speed)
         {
-            long moveTimes;
-            int thisOffsetX;
-            int thisOffsetY;
-            var minOffset = (speed == 0 ? 1 : speed) * 10;
+            try
+            {
+                long moveTimes;
+                int thisOffsetX;
+                int thisOffsetY;
+                var minOffset = (speed == 0 ? 1 : speed) * 10;
 
-            if (offsetX == 0 || offsetY == 0)
-            {
-                moveTimes = Math.Max(Math.Abs(offsetX) / minOffset, Math.Abs(offsetY) / minOffset);
-                thisOffsetX = (int) (offsetX / moveTimes);
-                thisOffsetY = (int) (offsetY / moveTimes);
-            }
-            else
-            {
-                moveTimes = Math.Min(Math.Abs(offsetX) / minOffset, Math.Abs(offsetY) / minOffset);
-                thisOffsetX = (int) (offsetX / moveTimes);
-                thisOffsetY = (int) (offsetY / moveTimes);
-            }
+                if (offsetX == 0 || offsetY == 0)
+                {
+                    moveTimes = Math.Max(Math.Abs(offsetX) / minOffset, Math.Abs(offsetY) / minOffset);
+                    moveTimes = moveTimes <= 0 ? 1 : moveTimes;
+                    thisOffsetX = (int) (offsetX / moveTimes);
+                    thisOffsetY = (int) (offsetY / moveTimes);
+                }
+                else
+                {
+                    moveTimes = Math.Min(Math.Abs(offsetX) / minOffset, Math.Abs(offsetY) / minOffset);
+                    moveTimes = moveTimes <= 0 ? 1 : moveTimes;
+                    thisOffsetX = (int) (offsetX / moveTimes);
+                    thisOffsetY = (int) (offsetY / moveTimes);
+                }
 
-            for (var i = 1; i <= moveTimes; i++)
+                for (var i = 1; i <= moveTimes; i++)
+                {
+                    Move(new Point(startPoint.X + thisOffsetX * i, startPoint.Y + thisOffsetY * i));
+                    Thread.Sleep(MouseDelay);
+                }
+            
+                Move(new Point(startPoint.X + offsetX, startPoint.Y + offsetY));
+            }
+            catch (Exception e)
             {
-                Move(new Point(startPoint.X + thisOffsetX * i, startPoint.Y + thisOffsetY * i));
-                Thread.Sleep(MouseDelay);
+                Console.WriteLine(e);
+                throw;
             }
             
-            Move(new Point(startPoint.X + offsetX, startPoint.Y + offsetY));
         }
 
         #endregion
