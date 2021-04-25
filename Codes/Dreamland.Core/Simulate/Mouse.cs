@@ -48,6 +48,7 @@ namespace Dreamland.Core.Simulate
             }
 
             User32.mouse_event(flags | User32.mouse_eventFlags.MOUSEEVENTF_ABSOLUTE, point.X, point.Y, 0, IntPtr.Zero);
+            Thread.Sleep(MouseDelay);
         }
 
         /// <summary>
@@ -69,24 +70,12 @@ namespace Dreamland.Core.Simulate
         public static void Click(MouseButtons buttons, Point point, bool isAbsolute = true)
         {
             Move(point, isAbsolute);
-            Thread.Sleep(MouseDelay);
             Click(buttons);
         }
 
         #endregion
 
         #region DoubleClick
-
-        /// <summary>
-        ///     在光标当前位置双击一次
-        /// </summary>
-        /// <param name="buttons">点击的鼠标按钮，默认使用鼠标左键。</param>
-        public static void DoubleClick(MouseButtons buttons = MouseButtons.Left)
-        {
-            Click(buttons);
-            Thread.Sleep(MouseDelay);
-            Click(buttons);
-        }
 
         /// <summary>
         ///     在指定位置双击一次
@@ -107,8 +96,17 @@ namespace Dreamland.Core.Simulate
         public static void DoubleClick(MouseButtons buttons, Point point, bool isAbsolute = true)
         {
             Move(point, isAbsolute);
-            Thread.Sleep(MouseDelay);
             DoubleClick(buttons);
+        }
+
+        /// <summary>
+        ///     在光标当前位置双击一次
+        /// </summary>
+        /// <param name="buttons">点击的鼠标按钮，默认使用鼠标左键。</param>
+        public static void DoubleClick(MouseButtons buttons = MouseButtons.Left)
+        {
+            Click(buttons);
+            Click(buttons);
         }
 
         #endregion
@@ -134,16 +132,23 @@ namespace Dreamland.Core.Simulate
         /// <param name="isAbsolute">使用绝对坐标时为 True，使用相对坐标时为 False。</param>
         public static void Move(Point point, bool isAbsolute = true)
         {
-            //使用 SetCursorPos() 设置鼠标坐标
-            if (isAbsolute)
-            {
-                User32.SetCursorPos(point.X, point.Y);
-            }
-            else
+            var x = point.X;
+            var y = point.Y;
+
+            if (!isAbsolute)
             {
                 GetCursorPos(out var currentPoint);
-                User32.SetCursorPos(currentPoint.X + point.X, currentPoint.Y + point.Y);
+                x = currentPoint.X + point.X; 
+                y = currentPoint.Y + point.Y;
             }
+            
+            var monitor = User32.GetSystemMetrics(User32.SystemMetric.SM_CMONITORS);
+            for (var i = 0; i < monitor; i++)
+            {
+                User32.SetCursorPos(x, y);
+            }
+
+            Thread.Sleep(MouseDelay);
         }
 
         #endregion
@@ -196,6 +201,8 @@ namespace Dreamland.Core.Simulate
         /// <param name="speed">拖拽速度</param>
         public static bool Drag(Point startPoint, int offsetX, int offsetY, uint speed = DefaultDragSpeed)
         {
+            Move(startPoint);
+
             User32.mouse_event(User32.mouse_eventFlags.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, IntPtr.Zero);
             Thread.Sleep(MouseDelay);
 
@@ -204,6 +211,7 @@ namespace Dreamland.Core.Simulate
 
             Thread.Sleep(MouseDelay);
             User32.mouse_event(User32.mouse_eventFlags.MOUSEEVENTF_LEFTUP, 0, 0, 0, IntPtr.Zero);
+            Thread.Sleep(MouseDelay);
             return true;
         }
 
@@ -225,6 +233,8 @@ namespace Dreamland.Core.Simulate
         /// <param name="speed">拖拽速度</param>
         public static bool Drag(Point startPoint, List<Point> pathPoints, uint speed = DefaultDragSpeed)
         {
+            Move(startPoint);
+
             User32.mouse_event(User32.mouse_eventFlags.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, IntPtr.Zero);
             Thread.Sleep(MouseDelay);
             
@@ -246,6 +256,7 @@ namespace Dreamland.Core.Simulate
             }
 
             User32.mouse_event(User32.mouse_eventFlags.MOUSEEVENTF_LEFTUP, 0, 0, 0, IntPtr.Zero);
+            Thread.Sleep(MouseDelay);
             return true;
         }
 
@@ -283,7 +294,6 @@ namespace Dreamland.Core.Simulate
                 for (var i = 1; i <= moveTimes; i++)
                 {
                     Move(new Point(startPoint.X + thisOffsetX * i, startPoint.Y + thisOffsetY * i));
-                    Thread.Sleep(MouseDelay);
                 }
             
                 Move(new Point(startPoint.X + offsetX, startPoint.Y + offsetY));
