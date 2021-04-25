@@ -250,7 +250,6 @@ namespace Dreamland.Core.Simulate
                 foreach (var pathPoint in pathPoints)
                 {
                     ExecuteDrag(startPoint, pathPoint.X - latestPoint.X, pathPoint.Y - latestPoint.Y, speed);
-                    latestPoint = pathPoint;
                     Thread.Sleep(MouseDelay);
                 }
             }
