@@ -150,33 +150,56 @@ namespace Dreamland.Core.Simulate
         #region Drag
 
         /// <summary>
-        ///     拖拽
+        ///     默认拖拽速度
         /// </summary>
-        /// <param name="offsetX">拖拽横向偏移量</param>
-        /// <param name="offsetY">拖拽纵向偏移量</param>
-        public static bool Drag(int offsetX, int offsetY)
-        {
-            return Drag(offsetX, offsetY, 5);
-        }
+        private const int DefaultDragSpeed = 10;
 
         /// <summary>
-        ///     拖拽
+        ///     从鼠标当前位置进行拖拽 <paramref name="offsetX"/> 个横向偏移量，<paramref name="offsetY"/> 个纵向偏移量
         /// </summary>
         /// <param name="offsetX">拖拽横向偏移量</param>
         /// <param name="offsetY">拖拽纵向偏移量</param>
         /// <param name="speed">拖拽速度</param>
-        public static bool Drag(int offsetX, int offsetY, uint speed)
+        public static bool Drag(int offsetX, int offsetY, uint speed = DefaultDragSpeed)
+        {
+            return GetCursorPos(out var currentPoint) && Drag(currentPoint, offsetX, offsetY, speed);
+        }
+
+        /// <summary>
+        ///     从鼠标当前位置进行拖拽至指定坐标点<paramref name="point"/>
+        /// </summary>
+        /// <param name="point">拖拽目标坐标点</param>
+        /// <param name="speed">拖拽速度</param>
+        public static bool Drag(Point point, uint speed = DefaultDragSpeed)
+        {
+            return GetCursorPos(out var currentPoint) && Drag(currentPoint, point, speed);
+        }
+
+        /// <summary>
+        ///     将鼠标从指定坐标点<paramref name="startPoint"/>拖拽至指定坐标点<paramref name="endPoint"/>
+        /// </summary>
+        /// <param name="startPoint">拖拽起始坐标点</param>
+        /// <param name="endPoint">拖拽目标坐标点</param>
+        /// <param name="speed">拖拽速度</param>
+        public static bool Drag(Point startPoint, Point endPoint, uint speed = DefaultDragSpeed)
+        {
+            return Drag(startPoint, endPoint.X - startPoint.X, endPoint.Y - startPoint.Y, speed);
+        }
+
+        /// <summary>
+        ///     将鼠标从指定坐标点<paramref name="startPoint"/>拖拽 <paramref name="offsetX"/> 个横向偏移量，<paramref name="offsetY"/> 个纵向偏移量
+        /// </summary>
+        /// <param name="startPoint">拖拽起始坐标点</param>
+        /// <param name="offsetX">拖拽横向偏移量</param>
+        /// <param name="offsetY">拖拽纵向偏移量</param>
+        /// <param name="speed">拖拽速度</param>
+        public static bool Drag(Point startPoint, int offsetX, int offsetY, uint speed = DefaultDragSpeed)
         {
             User32.mouse_event(User32.mouse_eventFlags.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, IntPtr.Zero);
             Thread.Sleep(MouseDelay);
 
-            if(!GetCursorPos(out var currentPoint))
-            {
-                return false;
-            }
-
             //执行移动
-            ExecuteDrag(currentPoint, offsetX, offsetY, speed);
+            ExecuteDrag(startPoint, offsetX, offsetY, speed);
 
             Thread.Sleep(MouseDelay);
             User32.mouse_event(User32.mouse_eventFlags.MOUSEEVENTF_LEFTUP, 0, 0, 0, IntPtr.Zero);
@@ -184,8 +207,12 @@ namespace Dreamland.Core.Simulate
         }
 
         /// <summary>
-        ///     执行一次拖拽
+        ///     执行一次拖拽<para>将鼠标从指定坐标点<paramref name="startPoint"/>拖拽 <paramref name="offsetX"/> 个横向偏移量，<paramref name="offsetY"/> 个纵向偏移量</para>
         /// </summary>
+        /// <param name="startPoint">拖拽起始坐标点</param>
+        /// <param name="offsetX">拖拽横向偏移量</param>
+        /// <param name="offsetY">拖拽纵向偏移量</param>
+        /// <param name="speed">拖拽速度</param>
         private static void ExecuteDrag(Point startPoint, int offsetX, int offsetY, uint speed)
         {
             long moveTimes;
