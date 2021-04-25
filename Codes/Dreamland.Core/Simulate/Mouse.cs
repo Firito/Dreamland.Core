@@ -269,41 +269,32 @@ namespace Dreamland.Core.Simulate
         /// <param name="speed">拖拽速度</param>
         private static void ExecuteDrag(Point startPoint, int offsetX, int offsetY, uint speed)
         {
-            try
+            long moveTimes;
+            int thisOffsetX;
+            int thisOffsetY;
+            var minOffset = (speed == 0 ? 1 : speed) * 10;
+
+            if (offsetX == 0 || offsetY == 0)
             {
-                long moveTimes;
-                int thisOffsetX;
-                int thisOffsetY;
-                var minOffset = (speed == 0 ? 1 : speed) * 10;
-
-                if (offsetX == 0 || offsetY == 0)
-                {
-                    moveTimes = Math.Max(Math.Abs(offsetX) / minOffset, Math.Abs(offsetY) / minOffset);
-                    moveTimes = moveTimes <= 0 ? 1 : moveTimes;
-                    thisOffsetX = (int) (offsetX / moveTimes);
-                    thisOffsetY = (int) (offsetY / moveTimes);
-                }
-                else
-                {
-                    moveTimes = Math.Min(Math.Abs(offsetX) / minOffset, Math.Abs(offsetY) / minOffset);
-                    moveTimes = moveTimes <= 0 ? 1 : moveTimes;
-                    thisOffsetX = (int) (offsetX / moveTimes);
-                    thisOffsetY = (int) (offsetY / moveTimes);
-                }
-
-                for (var i = 1; i <= moveTimes; i++)
-                {
-                    Move(new Point(startPoint.X + thisOffsetX * i, startPoint.Y + thisOffsetY * i));
-                }
-            
-                Move(new Point(startPoint.X + offsetX, startPoint.Y + offsetY));
+                moveTimes = Math.Max(Math.Abs(offsetX) / minOffset, Math.Abs(offsetY) / minOffset);
+                moveTimes = moveTimes <= 0 ? 1 : moveTimes;
+                thisOffsetX = (int) (offsetX / moveTimes);
+                thisOffsetY = (int) (offsetY / moveTimes);
             }
-            catch (Exception e)
+            else
             {
-                Console.WriteLine(e);
-                throw;
+                moveTimes = Math.Min(Math.Abs(offsetX) / minOffset, Math.Abs(offsetY) / minOffset);
+                moveTimes = moveTimes <= 0 ? 1 : moveTimes;
+                thisOffsetX = (int) (offsetX / moveTimes);
+                thisOffsetY = (int) (offsetY / moveTimes);
+            }
+
+            for (var i = 1; i <= moveTimes; i++)
+            {
+                Move(new Point(startPoint.X + thisOffsetX * i, startPoint.Y + thisOffsetY * i));
             }
             
+            Move(new Point(startPoint.X + offsetX, startPoint.Y + offsetY));
         }
 
         #endregion
