@@ -54,7 +54,7 @@ namespace Dreamland.Core.Simulate
         /// <summary>
         ///     在指定位置单击一次
         /// </summary>
-        /// <param name="point">指定的点击坐标</param>
+        /// <param name="point">指定的点击坐标，以屏幕坐标表示</param>
         /// <param name="isAbsolute">使用绝对坐标时为 True，使用相对坐标时为 False。</param>
         public static void Click(Point point, bool isAbsolute = true)
         {
@@ -65,7 +65,7 @@ namespace Dreamland.Core.Simulate
         ///     在指定位置单击一次
         /// </summary>
         /// <param name="buttons">点击的鼠标按钮。</param>
-        /// <param name="point">指定的点击坐标</param>
+        /// <param name="point">指定的点击坐标，以屏幕坐标表示</param>
         /// <param name="isAbsolute">使用绝对坐标时为 True，使用相对坐标时为 False。</param>
         public static void Click(MouseButtons buttons, Point point, bool isAbsolute = true)
         {
@@ -80,7 +80,7 @@ namespace Dreamland.Core.Simulate
         /// <summary>
         ///     在指定位置双击一次
         /// </summary>
-        /// <param name="point">指定的点击坐标</param>
+        /// <param name="point">指定的点击坐标，以屏幕坐标表示</param>
         /// <param name="isAbsolute">使用绝对坐标时为 True，使用相对坐标时为 False。</param>
         public static void DoubleClick(Point point, bool isAbsolute = true)
         {
@@ -91,7 +91,7 @@ namespace Dreamland.Core.Simulate
         ///     在指定位置双击一次
         /// </summary>
         /// <param name="buttons">点击的鼠标按钮。</param>
-        /// <param name="point">指定的点击坐标</param>
+        /// <param name="point">指定的点击坐标，以屏幕坐标表示</param>
         /// <param name="isAbsolute">使用绝对坐标时为 True，使用相对坐标时为 False。</param>
         public static void DoubleClick(MouseButtons buttons, Point point, bool isAbsolute = true)
         {
@@ -116,7 +116,7 @@ namespace Dreamland.Core.Simulate
         /// <summary>
         ///     获取鼠标位置
         /// </summary>
-        /// <param name="point">坐标</param>
+        /// <param name="point">坐标，以屏幕坐标表示</param>
         /// <returns></returns>
         public static bool GetCursorPos(out Point point)
         {
@@ -128,7 +128,7 @@ namespace Dreamland.Core.Simulate
         /// <summary>
         ///     移动鼠标到指定位置
         /// </summary>
-        /// <param name="point">指定的点击坐标</param>
+        /// <param name="point">指定的点击坐标，以屏幕坐标表示</param>
         /// <param name="isAbsolute">使用绝对坐标时为 True，使用相对坐标时为 False。</param>
         public static void Move(Point point, bool isAbsolute = true)
         {
@@ -163,8 +163,8 @@ namespace Dreamland.Core.Simulate
         /// <summary>
         ///     从鼠标当前位置进行拖拽 <paramref name="offsetX"/> 个横向偏移量，<paramref name="offsetY"/> 个纵向偏移量
         /// </summary>
-        /// <param name="offsetX">拖拽横向偏移量</param>
-        /// <param name="offsetY">拖拽纵向偏移量</param>
+        /// <param name="offsetX">拖拽横向偏移量，以屏幕坐标表示</param>
+        /// <param name="offsetY">拖拽纵向偏移量，以屏幕坐标表示</param>
         /// <param name="speed">拖拽速度</param>
         public static bool Drag(int offsetX, int offsetY, uint speed = DefaultDragSpeed)
         {
@@ -174,7 +174,7 @@ namespace Dreamland.Core.Simulate
         /// <summary>
         ///     从鼠标当前位置进行拖拽至指定坐标点<paramref name="point"/>
         /// </summary>
-        /// <param name="point">拖拽目标坐标点</param>
+        /// <param name="point">拖拽目标坐标点，以屏幕坐标表示</param>
         /// <param name="speed">拖拽速度</param>
         public static bool Drag(Point point, uint speed = DefaultDragSpeed)
         {
@@ -184,8 +184,8 @@ namespace Dreamland.Core.Simulate
         /// <summary>
         ///     将鼠标从指定坐标点<paramref name="startPoint"/>拖拽至指定坐标点<paramref name="endPoint"/>
         /// </summary>
-        /// <param name="startPoint">拖拽起始坐标点</param>
-        /// <param name="endPoint">拖拽目标坐标点</param>
+        /// <param name="startPoint">拖拽起始坐标点，以屏幕坐标表示</param>
+        /// <param name="endPoint">拖拽目标坐标点，以屏幕坐标表示</param>
         /// <param name="speed">拖拽速度</param>
         public static bool Drag(Point startPoint, Point endPoint, uint speed = DefaultDragSpeed)
         {
@@ -195,9 +195,9 @@ namespace Dreamland.Core.Simulate
         /// <summary>
         ///     将鼠标从指定坐标点<paramref name="startPoint"/>拖拽 <paramref name="offsetX"/> 个横向偏移量，<paramref name="offsetY"/> 个纵向偏移量
         /// </summary>
-        /// <param name="startPoint">拖拽起始坐标点</param>
-        /// <param name="offsetX">拖拽横向偏移量</param>
-        /// <param name="offsetY">拖拽纵向偏移量</param>
+        /// <param name="startPoint">拖拽起始坐标点，以屏幕坐标表示</param>
+        /// <param name="offsetX">拖拽横向偏移量，以屏幕坐标表示</param>
+        /// <param name="offsetY">拖拽纵向偏移量，以屏幕坐标表示</param>
         /// <param name="speed">拖拽速度</param>
         public static bool Drag(Point startPoint, int offsetX, int offsetY, uint speed = DefaultDragSpeed)
         {
@@ -218,7 +218,7 @@ namespace Dreamland.Core.Simulate
         /// <summary>
         ///     将鼠标从鼠标当前位置沿着<paramref name="pathPoints"/>路径进行拖拽
         /// </summary>
-        /// <param name="pathPoints">拖拽途径的点</param>
+        /// <param name="pathPoints">拖拽途径的点，以屏幕坐标表示</param>
         /// <param name="speed">拖拽速度</param>
         public static bool Drag(List<Point> pathPoints, uint speed = DefaultDragSpeed)
         {
@@ -228,8 +228,8 @@ namespace Dreamland.Core.Simulate
         /// <summary>
         ///     将鼠标从指定坐标点<paramref name="startPoint"/>沿着<paramref name="pathPoints"/>路径进行拖拽
         /// </summary>
-        /// <param name="startPoint">拖拽起始坐标点</param>
-        /// <param name="pathPoints">拖拽途径的点</param>
+        /// <param name="startPoint">拖拽起始坐标点，以屏幕坐标表示</param>
+        /// <param name="pathPoints">拖拽途径的点，以屏幕坐标表示</param>
         /// <param name="speed">拖拽速度</param>
         public static bool Drag(Point startPoint, List<Point> pathPoints, uint speed = DefaultDragSpeed)
         {
@@ -263,9 +263,9 @@ namespace Dreamland.Core.Simulate
         /// <summary>
         ///     执行一次拖拽<para>将鼠标从指定坐标点<paramref name="startPoint"/>拖拽 <paramref name="offsetX"/> 个横向偏移量，<paramref name="offsetY"/> 个纵向偏移量</para>
         /// </summary>
-        /// <param name="startPoint">拖拽起始坐标点</param>
-        /// <param name="offsetX">拖拽横向偏移量</param>
-        /// <param name="offsetY">拖拽纵向偏移量</param>
+        /// <param name="startPoint">拖拽起始坐标点，以屏幕坐标表示</param>
+        /// <param name="offsetX">拖拽横向偏移量，以屏幕坐标表示</param>
+        /// <param name="offsetY">拖拽纵向偏移量，以屏幕坐标表示</param>
         /// <param name="speed">拖拽速度</param>
         private static void ExecuteDrag(Point startPoint, int offsetX, int offsetY, uint speed)
         {
