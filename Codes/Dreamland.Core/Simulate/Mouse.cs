@@ -13,7 +13,7 @@ namespace Dreamland.Core.Simulate
         /// <summary>
         ///     鼠标事件延时
         /// </summary>
-        private const int MouseDelay = 100;
+        private const int MouseDelay = 50;
 
         #region Click
 
@@ -133,13 +133,6 @@ namespace Dreamland.Core.Simulate
         /// <param name="isAbsolute">使用绝对坐标时为 True，使用相对坐标时为 False。</param>
         public static void Move(Point point, bool isAbsolute = true)
         {
-            //先使用 mouse_event 触发鼠标事件
-            const User32.mouse_eventFlags moveFlags = User32.mouse_eventFlags.MOUSEEVENTF_MOVE;
-            var flags = isAbsolute ? User32.mouse_eventFlags.MOUSEEVENTF_ABSOLUTE | moveFlags : moveFlags;
-            User32.mouse_event(flags, point.X, point.Y, 0, IntPtr.Zero);
-
-            Thread.Sleep(MouseDelay);
-
             //使用 SetCursorPos() 设置鼠标坐标
             if (isAbsolute)
             {
@@ -150,6 +143,76 @@ namespace Dreamland.Core.Simulate
                 GetCursorPos(out var currentPoint);
                 User32.SetCursorPos(currentPoint.X + point.X, currentPoint.Y + point.Y);
             }
+        }
+
+        #endregion
+
+        #region Drag
+
+        /// <summary>
+        ///     拖拽
+        /// </summary>
+        /// <param name="offsetX">拖拽横向偏移量</param>
+        /// <param name="offsetY">拖拽纵向偏移量</param>
+        public static bool Drag(int offsetX, int offsetY)
+        {
+            return Drag(offsetX, offsetY, 5);
+        }
+
+        /// <summary>
+        ///     拖拽
+        /// </summary>
+        /// <param name="offsetX">拖拽横向偏移量</param>
+        /// <param name="offsetY">拖拽纵向偏移量</param>
+        /// <param name="speed">拖拽速度</param>
+        public static bool Drag(int offsetX, int offsetY, uint speed)
+        {
+            User32.mouse_event(User32.mouse_eventFlags.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, IntPtr.Zero);
+            Thread.Sleep(MouseDelay);
+
+            if(!GetCursorPos(out var currentPoint))
+            {
+                return false;
+            }
+
+            //执行移动
+            ExecuteDrag(currentPoint, offsetX, offsetY, speed);
+
+            Thread.Sleep(MouseDelay);
+            User32.mouse_event(User32.mouse_eventFlags.MOUSEEVENTF_LEFTUP, 0, 0, 0, IntPtr.Zero);
+            return true;
+        }
+
+        /// <summary>
+        ///     执行一次拖拽
+        /// </summary>
+        private static void ExecuteDrag(Point startPoint, int offsetX, int offsetY, uint speed)
+        {
+            long moveTimes;
+            int thisOffsetX;
+            int thisOffsetY;
+            var minOffset = (speed == 0 ? 1 : speed) * 10;
+
+            if (offsetX == 0 || offsetY == 0)
+            {
+                moveTimes = Math.Max(Math.Abs(offsetX) / minOffset, Math.Abs(offsetY) / minOffset);
+                thisOffsetX = (int) (offsetX / moveTimes);
+                thisOffsetY = (int) (offsetY / moveTimes);
+            }
+            else
+            {
+                moveTimes = Math.Min(Math.Abs(offsetX) / minOffset, Math.Abs(offsetY) / minOffset);
+                thisOffsetX = (int) (offsetX / moveTimes);
+                thisOffsetY = (int) (offsetY / moveTimes);
+            }
+
+            for (var i = 1; i <= moveTimes; i++)
+            {
+                Move(new Point(startPoint.X + thisOffsetX * i, startPoint.Y + thisOffsetY * i));
+                Thread.Sleep(MouseDelay);
+            }
+            
+            Move(new Point(startPoint.X + offsetX, startPoint.Y + offsetY));
         }
 
         #endregion
